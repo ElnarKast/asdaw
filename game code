@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #player {
+            width: 40px;
+            height: 40px;
+            background-color: rgb(56, 201, 12);
+            border: 5px solid rgb(44, 158, 9);
+            border-radius: 100%;
+        }
+        * {
+            position: fixed;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="player"></div>
+    <script>
+        let player = document.querySelector("#player")
+        let playerX = 500;
+        let playerY = 500
+        let direction = 1
+        let speed = 10
+        function update() {
+            if (playerX > 1800)
+                direction = -1;
+            else if (playerX < 0)
+                direction = 1;
+
+            playerX += direction * speed;
+        }
+
+        function render(lag0ffset) {
+            player.style.left = playerX + "px"
+            player.style.top = "500px"
+        }
+
+        //Set the frame rate
+        var fps = 60,
+            //Get the start time
+            start = Date.now(),
+            //Set the frame duration in milliseconds
+            frameDuration = 1000 / fps,
+            //Initialize the lag offset
+            lag = 0;
+
+        //Start the game loop
+        gameLoop();
+
+        function gameLoop() {
+            requestAnimationFrame(gameLoop);
+
+            //Calcuate the time that has elapsed since the last frame
+            var current = Date.now(),
+                elapsed = current - start;
+            start = current;
+            //Add the elapsed time to the lag counter
+            lag += elapsed;
+
+            //Update the frame if the lag counter is greater than or
+            //equal to the frame duration
+            while (lag >= frameDuration) {
+                //Update the logic
+                update();
+                //Reduce the lag counter by the frame duration
+                lag -= frameDuration;
+            }
+            //Calculate the lag offset and use it to render the sprites
+            var lagOffset = lag / frameDuration;
+            render(lagOffset);
+        }
+    </script>
+</body>
+
+</html>
